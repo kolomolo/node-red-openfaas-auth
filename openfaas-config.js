@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-  async function FaasConfigNode(settings) {
+  function FaasConfigNode(settings) {
     RED.nodes.createNode(this, settings);
     this.host = settings.host;
     this.port = settings.port;
@@ -9,5 +9,5 @@ module.exports = function(RED) {
     this.apiKey = settings.apiKey;
   }
 
-  RED.nodes.registerType("lower-case", FaasConfigNode);
+  RED.nodes.registerType("openfaas-config", FaasConfigNode);
 };

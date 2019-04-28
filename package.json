@@ -9,6 +9,10 @@
   "scripts": {
     "test": "jest"
   },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
+  },
   "node-red": {
     "nodes": {
       "openfaas-function": "openfaas-function.js",
