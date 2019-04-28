@@ -1,0 +1,45 @@
+{
+  "name": "node-red-openfaas-auth",
+  "version": "1.0.0",
+  "description": "NodeRED OpenFaaS Integration with Authentication support",
+  "main": "openfaas-auth.js",
+  "author": "Franciszek Madej <franciszek.madej@kolomololabs.com>",
+  "license": "GPL-3.0",
+  "private": false,
+  "scripts": {
+    "test": "jest"
+  },
+  "node-red": {
+    "nodes": {
+      "openfaas-auth": "openfaas-auth.js"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "@commitlint/config-conventional": "^7.5.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-jest": "^22.5.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^2.1.0",
+    "jest": "^24.7.1",
+    "node-red": "^0.20.5",
+    "node-red-node-test-helper": "^0.2.2",
+    "prettier": "^1.17.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "dependencies": {
+    "superagent": "^5.0.4"
+  }
+}
