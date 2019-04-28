@@ -1,26 +1,30 @@
 <script type="text/javascript">
-  RED.nodes.registerType("lower-case", {
+  RED.nodes.registerType("openfaas-function", {
     category: "function",
     color: "#a6bbcf",
     defaults: {
-      name: { value: "" }
+      name: { value: "" },
+      server: { value: "", type: "openfaas-config" }
     },
     inputs: 1,
     outputs: 1,
-    icon: "file.png",
     label: function() {
-      return this.name || "lower-case";
+      return this.name || "openfaas-function";
     }
   });
 </script>
 
-<script type="text/x-red" data-template-name="lower-case">
+<script type="text/x-red" data-template-name="openfaas-function">
   <div class="form-row">
-        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Server</label>
+    <select type="text" id="node-input-server" placeholder="Select OpenFaaS server..."></select>
+  </div>
 </script>
 
-<script type="text/x-red" data-help-name="lower-case">
-  <p>A simple node that converts the message payloads into all lower-case characters</p>
+<script type="text/x-red" data-help-name="openfaas-function">
+  <p>A node that executes openfaas function</p>
 </script>

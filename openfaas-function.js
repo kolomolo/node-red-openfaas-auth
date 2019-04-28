@@ -1,12 +1,34 @@
 const superagent = require("superagent");
 
 module.exports = function(RED) {
-  async function FaasNode(config) {
+  function FaasNode(config) {
     RED.nodes.createNode(this, config);
-    this.on("input", msg => {
-      this.send(msg);
+
+    this.server = RED.nodes.getNode(config.server);
+    if (!this.server) {
+      throw "You need to select server first";
+    }
+
+    this.on("input", async msg => {
+      const agent = superagent.agent();
+      if (this.server.authType === "jwt") {
+        agent.set("Authorization", `Bearer ${this.server.jwt}`);
+      } else if (this.server.authType == "apiKey") {
+        agent.set(this.server.apiKeyHeader, this.server.apiKey);
+      }
+
+      const REQUEST_URL = `${this.server.protocol}://${this.server.host}:${
+        this.server.port
+      }/${this.functionsEndpoint}`;
+
+      try {
+        const response = await agent.post(`${REQUEST_URL}/${this.name}`);
+        msg.push(response);
+      } catch (error) {
+        throw error;
+      }
     });
   }
 
-  RED.nodes.registerType("lower-case", FaasNode);
+  RED.nodes.registerType("openfaas-function", FaasNode);
 };
