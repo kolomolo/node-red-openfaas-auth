@@ -4,11 +4,8 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: [
-    "eslint:recommended",
-    "plugin:prettier/recommended",
-    "plugin:jest/recommended"
-  ],
+  plugins: ["mocha"],
+  extends: ["eslint:recommended", "plugin:prettier/recommended"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly"
@@ -16,5 +13,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018
   },
-  rules: {}
+  rules: {
+    "mocha/no-exclusive-tests": "error"
+  }
 };
