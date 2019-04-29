@@ -7,6 +7,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
+    "release": "standard-version",
     "test": "mocha --recursive ./**/*.test.js"
   },
   "node-red": {
@@ -33,7 +34,8 @@
     "node-red": "^0.20.5",
     "node-red-node-test-helper": "^0.2.2",
     "prettier": "^1.17.0",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "standard-version": "^5.0.2"
   },
   "husky": {
     "hooks": {
