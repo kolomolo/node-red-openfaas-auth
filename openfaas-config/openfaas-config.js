@@ -5,9 +5,10 @@ module.exports = function(RED) {
     this.host = settings.host;
     this.port = settings.port;
     this.endpoint = settings.endpoint;
-    this.authType = settings.authType;
-    this.jwtToken = settings.jwtToken;
-    this.apiKey = settings.apiKey;
+    this.auth = settings.auth;
+    this.jwt = settings.jwt;
+    this.header = settings.header;
+    this.api = settings.api;
     this.parse = settings.parse;
   }
 

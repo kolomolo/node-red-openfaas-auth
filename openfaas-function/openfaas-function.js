@@ -11,10 +11,10 @@ module.exports = function(RED) {
 
     this.on("input", async msg => {
       const agent = superagent.agent();
-      if (this.server.authType === "jwt") {
+      if (this.server.auth === "jwt") {
         agent.set("Authorization", `Bearer ${this.server.jwt}`);
-      } else if (this.server.authType == "apiKey") {
-        agent.set(this.server.apiKeyHeader, this.server.apiKey);
+      } else if (this.server.auth == "api") {
+        agent.set(this.server.header, this.server.api);
       }
 
       const REQUEST_URL = `${this.server.protocol}://${this.server.host}:${
@@ -25,12 +25,10 @@ module.exports = function(RED) {
         .post(`${REQUEST_URL}/${this.name}`)
         .send(msg.payload)
         .then(response => {
-          console.log(response.text);
-          console.log(this.server.parse);
           const payload = this.server.parse ? response.body : response.text;
           this.send(payload);
         })
-        .catch(error => console.error(error.message));
+        .catch(error => this.warn(error));
     });
   }
 

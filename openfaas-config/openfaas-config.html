@@ -6,9 +6,10 @@
       host: { value: "localhost", required: true },
       port: { value: 8080, required: true, validate: RED.validators.number() },
       endpoint: { value: "function", required: false },
-      authType: { value: "none", required: false },
-      jwtToken: { value: "none", required: false },
-      apiKey: { value: "none", required: false },
+      auth: { value: "none", required: false },
+      jwt: { value: "none", required: false },
+      api: { value: "none", required: false },
+      header: { value: "none", required: false },
       parse: { value: true, required: true }
     },
     label: function() {
@@ -39,19 +40,23 @@
   </div>
   <div class="form-row">
       <label for="node-config-input-authtype"><i class="icon-bookmark"></i> Authentication Type</label>
-      <select type="text" id="node-config-input-authtype" style="width: 150px;">
+      <select type="text" id="node-config-input-auth" style="width: 150px;">
         <option value="none">No authentication</option>
         <option value="jwt">JSON Web Token (JWT)</option>
-        <option value="apikey">API Key Authentication</option>
+        <option value="api">API Key Authentication</option>
       </select>
   </div>
   <div class="form-row">
-      <label for="node-config-input-jwttoken"><i class="icon-bookmark"></i> JWT</label>
-      <input type="text" id="node-config-input-jwttoken">
+      <label for="node-config-input-jwt"><i class="icon-bookmark"></i> JWT</label>
+      <input type="text" id="node-config-input-jwt">
   </div>
   <div class="form-row">
-      <label for="node-config-input-apikey"><i class="icon-bookmark"></i> API Key</label>
-      <input type="text" id="node-config-input-apikey">
+      <label for="node-config-input-api"><i class="icon-bookmark"></i> API Key</label>
+      <input type="text" id="node-config-input-api">
+  </div>
+  <div class="form-row">
+      <label for="node-config-input-header"><i class="icon-bookmark"></i> API Key Header</label>
+      <input type="text" id="node-config-input-header">
   </div>
       <input type="checkbox" id="node-config-input-parse" style="display:inline-block; width:auto; vertical-align:top;">
       Return parsed JSON / Return response as Text<br/>
