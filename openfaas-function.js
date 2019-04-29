@@ -19,14 +19,18 @@ module.exports = function(RED) {
 
       const REQUEST_URL = `${this.server.protocol}://${this.server.host}:${
         this.server.port
-      }/${this.functionsEndpoint}`;
+      }/${this.server.endpoint}`;
 
-      try {
-        const response = await agent.post(`${REQUEST_URL}/${this.name}`);
-        msg.push(response);
-      } catch (error) {
-        throw error;
-      }
+      agent
+        .post(`${REQUEST_URL}/${this.name}`)
+        .send(msg.payload)
+        .then(response => {
+          console.log(response.text);
+          console.log(this.server.parse);
+          const payload = this.server.parse ? response.body : response.text;
+          this.send(payload);
+        })
+        .catch(error => console.error(error.message));
     });
   }
 
