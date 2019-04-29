@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "private": false,
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "jest": {
     "verbose": true,
