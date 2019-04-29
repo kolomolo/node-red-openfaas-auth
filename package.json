@@ -15,8 +15,8 @@
   },
   "node-red": {
     "nodes": {
-      "openfaas-function": "openfaas-function.js",
-      "openfaas-config": "openfaas-config.js"
+      "openfaas-function": "openfaas-function/openfaas-function.js",
+      "openfaas-config": "openfaas-config/openfaas-config.js"
     }
   },
   "devDependencies": {

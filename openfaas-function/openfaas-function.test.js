@@ -1,5 +1,5 @@
 const faasNode = require("./openfaas-function.js");
-const faasConfigNode = require("./openfaas-config.js");
+const faasConfigNode = require("../openfaas-config/openfaas-config.js");
 const helper = require("node-red-node-test-helper");
 
 helper.init(require.resolve("node-red"));
