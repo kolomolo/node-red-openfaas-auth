@@ -8,7 +8,8 @@
   "private": false,
   "scripts": {
     "release": "standard-version",
-    "test": "mocha --recursive ./**/*.test.js"
+    "test": "nyc --reporter=lcov mocha --recursive ./**/*.test.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "node-red": {
     "nodes": {
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.5.2",
     "@commitlint/config-conventional": "^7.5.0",
+    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.2.0",
     "eslint-config-standard": "^12.0.0",
@@ -33,6 +35,7 @@
     "nock": "^10.0.6",
     "node-red": "^0.20.5",
     "node-red-node-test-helper": "^0.2.2",
+    "nyc": "^14.1.0",
     "prettier": "^1.17.0",
     "should": "^13.2.3",
     "standard-version": "^5.0.2"
