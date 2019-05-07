@@ -6,4 +6,4 @@ script:
   - yarn run test
 
 after_script:
-  - yarn run coveralls
+  - yarn run coverage
