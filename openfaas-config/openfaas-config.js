@@ -9,7 +9,6 @@ module.exports = function(RED) {
     this.jwt = settings.jwt;
     this.header = settings.header;
     this.api = settings.api;
-    this.parse = settings.parse;
   }
 
   RED.nodes.registerType("openfaas-config", FaasConfigNode);
