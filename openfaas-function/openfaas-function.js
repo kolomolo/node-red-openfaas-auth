@@ -38,7 +38,9 @@ module.exports = function(RED) {
           const message = { response, payload };
           this.send(message);
         })
-        .catch(error => this.warn(error.response));
+        .catch(error =>
+          this.warn(`${JSON.stringify(request)} resulted in ${error}`)
+        );
     });
   }
 

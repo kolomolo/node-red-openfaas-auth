@@ -146,7 +146,9 @@ describe("openfaas-function node", function() {
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         testNode.on("call:warn", function(event) {
-          should(event.args[0].error.status).equal(403);
+          should(event.args[0]).equal(
+            '{"payload":"test","args":{}} resulted in Error: Forbidden'
+          );
           done();
         });
         testNode.receive({ payload: "test" });
@@ -207,7 +209,9 @@ describe("openfaas-function node", function() {
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         testNode.on("call:warn", function(event) {
-          should(event.args[0].error.status).equal(403);
+          should(event.args[0]).equal(
+            '{"payload":"test","args":{}} resulted in Error: Forbidden'
+          );
           done();
         });
         testNode.receive({ payload: "test" });
