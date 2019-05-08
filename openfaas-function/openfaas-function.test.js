@@ -15,8 +15,8 @@ const FaasConfig = {
   endpoint: "function",
   auth: "none",
   jwt: null,
-  api: "StrongRandomAPIKey",
-  header: "apikey"
+  api: null,
+  header: null
 };
 const FaasFunction = {
   id: "n2",
@@ -116,7 +116,16 @@ describe("openfaas-function node", function() {
     });
 
     it("should work with proper configuration", function(done) {
-      const flow = [FaasConfig, FaasFunction, FaasHelper];
+      const flow = [
+        {
+          ...FaasConfig,
+          auth: "api",
+          apikey: "StrongRandomAPIKey",
+          header: "apikey"
+        },
+        FaasFunction,
+        FaasHelper
+      ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
@@ -129,7 +138,11 @@ describe("openfaas-function node", function() {
     });
 
     it("shouldn't work with wrong configuration", function(done) {
-      const flow = [{ ...FaasConfig, apikey: null }, FaasFunction, FaasHelper];
+      const flow = [
+        { ...FaasConfig, auth: "api", apikey: null, header: "apikey" },
+        FaasFunction,
+        FaasHelper
+      ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         testNode.on("call:warn", function(event) {
