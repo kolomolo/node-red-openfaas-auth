@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.2.0](https://github.com/kolomolo/node-red-openfaas-auth/compare/v1.1.0...v1.2.0) (2019-05-08)
+
+
+### Features
+
+* add Arguments to Function node ([59498ae](https://github.com/kolomolo/node-red-openfaas-auth/commit/59498ae))
+* add README ([74bd0c8](https://github.com/kolomolo/node-red-openfaas-auth/commit/74bd0c8))
+
+
+### Reverts
+
+* remove parsing to JSON ([fc57e4f](https://github.com/kolomolo/node-red-openfaas-auth/commit/fc57e4f))
+
+
+
 # 1.1.0 (2019-04-29)
 
 
