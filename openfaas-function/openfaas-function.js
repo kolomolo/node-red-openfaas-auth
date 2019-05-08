@@ -23,16 +23,20 @@ module.exports = function(RED) {
     if (!this.server) {
       throw "You need to select server first";
     }
+    this.args = config.args;
 
     this.on("input", async msg => {
       const { agent, requestUrl } = prepareSuperagent(this.server);
-      this.debug(agent, requestUrl);
+      const request = { payload: null, args: {} };
+      request["args"] = this.args || {};
+      request["payload"] = msg.payload;
       agent
         .post(`${requestUrl}/${this.name}`)
-        .send(msg.payload)
+        .send(request)
         .then(response => {
-          const payload = this.server.parse ? response.body : response.text;
-          this.send(payload);
+          const payload = response.text;
+          const message = { response, payload };
+          this.send(message);
         })
         .catch(error => this.warn(error.response));
     });

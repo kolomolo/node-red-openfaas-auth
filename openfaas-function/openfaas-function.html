@@ -4,6 +4,7 @@
     color: "#a6bbcf",
     defaults: {
       name: { value: "" },
+      args: { value: {}, validate: RED.validators.typedInput("json") },
       server: { value: "", type: "openfaas-config" }
     },
     icon: "openfaas.png",
@@ -11,6 +12,9 @@
     outputs: 1,
     label: function() {
       return this.name || "openfaas-function";
+    },
+    oneditprepare: function() {
+      $("#node-input-args").typedInput({ types: ["json"] });
     }
   });
 </script>
@@ -21,11 +25,13 @@
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
   <div class="form-row">
-    <label for="node-input-name"><i class="icon-tag"></i> Server</label>
-    <select type="text" id="node-input-server" placeholder="Select OpenFaaS server..."></select>
+    <label for="node-input-args"><i class="fa fa-cogs"></i> Arguments</label>
+    <input style="width: 70%" type="text" id="node-input-args" placeholder="JSON formatted arguments">
   </div>
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-server"></i> Server</label>
+    <select type="text" id="node-input-server" placeholder="Select OpenFaaS server..."></select> </div>
 </script>
-
 <script type="text/x-red" data-help-name="openfaas-function">
   <p>A node that executes openfaas function</p>
 </script>

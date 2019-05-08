@@ -6,6 +6,30 @@ const nock = require("nock");
 
 helper.init(require.resolve("node-red"));
 
+const FaasConfig = {
+  id: "n1",
+  type: "openfaas-config",
+  host: "faas.com",
+  port: "8080",
+  protocol: "http",
+  endpoint: "function",
+  auth: "none",
+  jwt: null,
+  api: "StrongRandomAPIKey",
+  header: "apikey"
+};
+const FaasFunction = {
+  id: "n2",
+  type: "openfaas-function",
+  name: "havebeenipwned",
+  server: "n1",
+  wires: [["n3"]]
+};
+const FaasHelper = {
+  id: "n3",
+  type: "helper"
+};
+
 describe("openfaas-function node", function() {
   beforeEach(function(done) {
     helper.startServer(done);
@@ -22,41 +46,19 @@ describe("openfaas-function node", function() {
       nock.disableNetConnect();
       nock("http://faas.com:8080")
         .post("/function/havebeenipwned")
-        .reply(200, '{"found": 123}');
+        .reply(function(_, requestBody) {
+          return requestBody.args.mail === "test@mail.com"
+            ? "test@mail.com argument"
+            : '{"found": 123}';
+        });
     });
 
     after(function() {
       nock.cleanAll();
     });
 
-    it("shouldn't load without configuration", function(done) {
-      const flow = [
-        { id: "n1", type: "openfaas-function", name: "test-function" }
-      ];
-      helper.load(faasNode, flow, function() {
-        const testNode = helper.getNode("n1");
-        should(testNode).not.exist;
-        done();
-      });
-    });
-
     it("should load with configuration", function(done) {
-      const flow = [
-        {
-          id: "n1",
-          type: "openfaas-config",
-          host: "locahost",
-          port: "8080",
-          endpoint: "function"
-        },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        }
-      ];
+      const flow = [FaasConfig, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         should(testNode).have.ownProperty("name");
@@ -64,41 +66,29 @@ describe("openfaas-function node", function() {
       });
     });
 
-    it("should work with proper configuration", function(done) {
+    it("should work with arguments", function(done) {
       const flow = [
-        {
-          id: "n1",
-          type: "openfaas-config",
-          host: "faas.com",
-          port: "8080",
-          protocol: "http",
-          endpoint: "function",
-          auth: "none",
-          jwt: "none",
-          api: "StrongRandomAPIKey",
-          header: "apikey",
-          parse: false
-        },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        },
-        {
-          id: "n3",
-          type: "helper"
-        }
+        FaasConfig,
+        { ...FaasFunction, args: { mail: "test@mail.com" } },
+        FaasHelper
       ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg).equal('{"found": 123}');
+          should(msg.payload).equal("test@mail.com argument");
           done();
         });
         testNode.receive({ payload: "test" });
+      });
+    });
+
+    it("shouldn't load without configuration", function(done) {
+      const flow = [FaasFunction];
+      helper.load(faasNode, flow, function() {
+        const testNode = helper.getNode("n1");
+        should(testNode).not.exist;
+        done();
       });
     });
   });
@@ -126,37 +116,12 @@ describe("openfaas-function node", function() {
     });
 
     it("should work with proper configuration", function(done) {
-      const flow = [
-        {
-          id: "n1",
-          type: "openfaas-config",
-          host: "faas.com",
-          port: "8080",
-          protocol: "http",
-          endpoint: "function",
-          auth: "api",
-          jwt: "none",
-          api: "StrongRandomAPIKey",
-          header: "apikey",
-          parse: false
-        },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        },
-        {
-          id: "n3",
-          type: "helper"
-        }
-      ];
+      const flow = [FaasConfig, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg).equal('{"found": 123}');
+          should(msg.payload).equal('{"found": 123}');
           done();
         });
         testNode.receive({ payload: "test" });
@@ -164,32 +129,7 @@ describe("openfaas-function node", function() {
     });
 
     it("shouldn't work with wrong configuration", function(done) {
-      const flow = [
-        {
-          id: "n1",
-          type: "openfaas-config",
-          host: "faas.com",
-          port: "8080",
-          protocol: "http",
-          endpoint: "function",
-          auth: "api",
-          jwt: "none",
-          api: "none",
-          header: "apikey",
-          parse: false
-        },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        },
-        {
-          id: "n3",
-          type: "helper"
-        }
-      ];
+      const flow = [{ ...FaasConfig, apikey: null }, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         testNode.on("call:warn", function(event) {
@@ -230,36 +170,19 @@ describe("openfaas-function node", function() {
     it("should work with proper configuration", function(done) {
       const flow = [
         {
-          id: "n1",
-          type: "openfaas-config",
-          host: "faas.com",
-          port: "8080",
-          protocol: "http",
-          endpoint: "function",
+          ...FaasConfig,
           auth: "jwt",
           jwt:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-          api: "StrongRandomAPIKey",
-          header: "apikey",
-          parse: false
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        },
-        {
-          id: "n3",
-          type: "helper"
-        }
+        FaasFunction,
+        FaasHelper
       ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg).equal('{"found": 123}');
+          should(msg.payload).equal('{"found": 123}');
           done();
         });
         testNode.receive({ payload: "test" });
@@ -267,32 +190,7 @@ describe("openfaas-function node", function() {
     });
 
     it("shouldn't work with wrong configuration", function(done) {
-      const flow = [
-        {
-          id: "n1",
-          type: "openfaas-config",
-          host: "faas.com",
-          port: "8080",
-          protocol: "http",
-          endpoint: "function",
-          auth: "jwt",
-          jwt: null,
-          api: "StrongRandomAPIKey",
-          header: "apikey",
-          parse: false
-        },
-        {
-          id: "n2",
-          type: "openfaas-function",
-          name: "havebeenipwned",
-          server: "n1",
-          wires: [["n3"]]
-        },
-        {
-          id: "n3",
-          type: "helper"
-        }
-      ];
+      const flow = [FaasConfig, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
         testNode.on("call:warn", function(event) {
