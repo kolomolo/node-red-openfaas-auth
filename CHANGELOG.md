@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [1.3.0](https://github.com/kolomolo/node-red-openfaas-auth/compare/v1.2.0...v1.3.0) (2019-05-16)
+
+
+### Features
+
+* add Admin Endpoint for Function List fetch ([9ae72d7](https://github.com/kolomolo/node-red-openfaas-auth/commit/9ae72d7))
+* use function from server list ([ccf5d9e](https://github.com/kolomolo/node-red-openfaas-auth/commit/ccf5d9e))
+
+
+
 # [1.2.0](https://github.com/kolomolo/node-red-openfaas-auth/compare/v1.1.0...v1.2.0) (2019-05-08)
 
 
