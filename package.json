@@ -51,7 +51,6 @@
     }
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "superagent": "^5.0.4"
+    "axios": "^0.18.0"
   }
 }
