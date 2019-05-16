@@ -6,12 +6,12 @@
 
 Integrate your OpenFaaS functions into NodeRED.
 
+![OpenFaaS Node Screenshot](./node_screenshot.png)
+
 ## Features
 
 - OpenFaaS server configuration shared between function nodes
-- JWT, API Key Authentication
+- Fetching functions from server and showing them in a dropdown
+- JWT, API Key Authentication for functions endpoint
+- Standard Authentication for admin endpoint
 - *Cool* OpenFaaS logo
-
-## Planned features:
-
-- Fetching functions from server (dropdown maybe?)
