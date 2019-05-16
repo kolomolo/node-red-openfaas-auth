@@ -10,7 +10,8 @@
       jwt: { value: "none", required: false },
       api: { value: "none", required: false },
       header: { value: "none", required: false },
-      parse: { value: true, required: true }
+      username: { value: "", required: false },
+      password: { value: "", required: false }
     },
     label: function() {
       return this.host + ":" + this.port;
@@ -57,5 +58,13 @@
   <div class="form-row">
       <label for="node-config-input-header"><i class="icon-bookmark"></i> API Key Header</label>
       <input type="text" id="node-config-input-header">
+  </div>
+  <div class="form-row">
+      <label for="node-config-input-username"><i class="icon-bookmark"></i> HTTP Admin Auth Username</label>
+      <input type="text" id="node-config-input-username">
+  </div>
+  <div class="form-row">
+      <label for="node-config-input-password"><i class="icon-bookmark"></i> HTTP Admin Auth Password</label>
+      <input type="password" id="node-config-input-password">
   </div>
 </script>
