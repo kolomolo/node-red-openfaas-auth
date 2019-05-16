@@ -1,19 +1,4 @@
-const superagent = require("superagent");
-
-const prepareSuperagent = server => {
-  const requestUrl = `${server.protocol}://${server.host}:${server.port}/${
-    server.endpoint
-  }`;
-
-  const agent = superagent.agent();
-  if (server.auth === "jwt") {
-    agent.set("Authorization", `Bearer ${server.jwt}`);
-  } else if (server.auth == "api") {
-    agent.set(server.header, server.api);
-  }
-
-  return { agent, requestUrl };
-};
+const prepareSuperagent = require("../common/prepareSuperagent");
 
 module.exports = function(RED) {
   function FaasNode(config) {
@@ -23,6 +8,7 @@ module.exports = function(RED) {
     if (!this.server) {
       throw "You need to select server first";
     }
+    this.function = config.function;
     this.args = config.args;
 
     this.on("input", async msg => {
@@ -30,17 +16,18 @@ module.exports = function(RED) {
       const request = { payload: null, args: {} };
       request["args"] = this.args || {};
       request["payload"] = msg.payload;
-      agent
-        .post(`${requestUrl}/${this.name}`)
-        .send(request)
-        .then(response => {
-          const payload = response.text;
-          const message = { response, payload };
-          this.send(message);
-        })
-        .catch(error =>
-          this.warn(`${JSON.stringify(request)} resulted in ${error}`)
+      try {
+        const response = await agent.post(
+          `${requestUrl}/${this.function}`,
+          request
         );
+        msg.payload = response.data;
+        this.send(msg);
+      } catch (error) {
+        this.warn(
+          `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
+        );
+      }
     });
   }
 

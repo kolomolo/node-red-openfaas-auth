@@ -21,7 +21,8 @@ const FaasConfig = {
 const FaasFunction = {
   id: "n2",
   type: "openfaas-function",
-  name: "havebeenipwned",
+  name: "Have Been I Pwned",
+  function: "havebeenipwned",
   server: "n1",
   wires: [["n3"]]
 };
@@ -42,18 +43,14 @@ describe("openfaas-function node", function() {
   });
 
   describe("basic functionality", function() {
-    before(function() {
+    beforeEach(function() {
       nock.disableNetConnect();
       nock("http://faas.com:8080")
         .post("/function/havebeenipwned")
-        .reply(function(_, requestBody) {
-          return requestBody.args.mail === "test@mail.com"
-            ? "test@mail.com argument"
-            : '{"found": 123}';
-        });
+        .reply(200, '{"found": 123}');
     });
 
-    after(function() {
+    afterEach(function() {
       nock.cleanAll();
     });
 
@@ -63,6 +60,61 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         should(testNode).have.ownProperty("name");
         done();
+      });
+    });
+
+    it("shouldn't load without configuration", function(done) {
+      const flow = [FaasFunction];
+      helper.load(faasNode, flow, function() {
+        const testNode = helper.getNode("n1");
+        should(testNode).not.exist;
+        done();
+      });
+    });
+    it("should work with proper configuration", function(done) {
+      const flow = [FaasConfig, FaasFunction, FaasHelper];
+      helper.load([faasNode, faasConfigNode], flow, function() {
+        const testNode = helper.getNode("n2");
+        const resultNode = helper.getNode("n3");
+        resultNode.on("input", function(msg) {
+          should(msg.payload).deepEqual({ found: 123 });
+          done();
+        });
+        testNode.receive({ payload: "test" });
+      });
+    });
+  });
+  describe("test arguments", function() {
+    beforeEach(function() {
+      nock.disableNetConnect();
+      nock("http://faas.com:8080")
+        .post("/function/havebeenipwned")
+        .reply(function(_path, requestBody) {
+          const body = JSON.parse(requestBody);
+          return body.args.mail === "test@mail.com"
+            ? "TEST_SUCCEDED"
+            : "TEST_FAILED";
+        });
+    });
+
+    afterEach(function() {
+      nock.cleanAll();
+    });
+
+    it("shouldn't work without arguments", function(done) {
+      const flow = [
+        FaasConfig,
+        { ...FaasFunction, args: { mail: "test2@mail.com" } },
+        FaasHelper
+      ];
+      helper.load([faasNode, faasConfigNode], flow, function() {
+        const testNode = helper.getNode("n2");
+        const resultNode = helper.getNode("n3");
+        resultNode.on("input", function(msg) {
+          should(msg.payload).equal("TEST_FAILED");
+          done();
+        });
+        testNode.receive({ payload: "test" });
       });
     });
 
@@ -76,25 +128,16 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).equal("test@mail.com argument");
+          should(msg.payload).equal("TEST_SUCCEDED");
           done();
         });
         testNode.receive({ payload: "test" });
       });
     });
-
-    it("shouldn't load without configuration", function(done) {
-      const flow = [FaasFunction];
-      helper.load(faasNode, flow, function() {
-        const testNode = helper.getNode("n1");
-        should(testNode).not.exist;
-        done();
-      });
-    });
   });
 
   describe("API Key functionality", function() {
-    before(function() {
+    beforeEach(function() {
       nock.disableNetConnect();
       nock("http://faas.com:8080", {
         reqheaders: {
@@ -111,7 +154,7 @@ describe("openfaas-function node", function() {
         .reply(403, "Not authorized");
     });
 
-    after(function() {
+    afterEach(function() {
       nock.cleanAll();
     });
 
@@ -120,7 +163,7 @@ describe("openfaas-function node", function() {
         {
           ...FaasConfig,
           auth: "api",
-          apikey: "StrongRandomAPIKey",
+          api: "StrongRandomAPIKey",
           header: "apikey"
         },
         FaasFunction,
@@ -130,7 +173,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).equal('{"found": 123}');
+          should(msg.payload).deepEqual({ found: 123 });
           done();
         });
         testNode.receive({ payload: "test" });
@@ -145,10 +188,8 @@ describe("openfaas-function node", function() {
       ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
-        testNode.on("call:warn", function(event) {
-          should(event.args[0]).equal(
-            '{"payload":"test","args":{}} resulted in Error: Forbidden'
-          );
+        testNode.on("call:warn", function(error) {
+          should(error).exist;
           done();
         });
         testNode.receive({ payload: "test" });
@@ -157,7 +198,7 @@ describe("openfaas-function node", function() {
   });
 
   describe("JSON Web Token functionality", function() {
-    before(function() {
+    beforeEach(function() {
       nock.disableNetConnect();
       nock("http://faas.com:8080", {
         reqheaders: {
@@ -178,7 +219,7 @@ describe("openfaas-function node", function() {
         .reply(403, "Not authorized");
     });
 
-    after(function() {
+    afterEach(function() {
       nock.cleanAll();
     });
 
@@ -197,7 +238,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).equal('{"found": 123}');
+          should(msg.payload).deepEqual({ found: 123 });
           done();
         });
         testNode.receive({ payload: "test" });
@@ -208,10 +249,8 @@ describe("openfaas-function node", function() {
       const flow = [FaasConfig, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
-        testNode.on("call:warn", function(event) {
-          should(event.args[0]).equal(
-            '{"payload":"test","args":{}} resulted in Error: Forbidden'
-          );
+        testNode.on("call:warn", function(error) {
+          should(error).exist;
           done();
         });
         testNode.receive({ payload: "test" });

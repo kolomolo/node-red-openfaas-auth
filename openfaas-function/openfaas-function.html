@@ -4,6 +4,7 @@
     color: "#a6bbcf",
     defaults: {
       name: { value: "" },
+      function: { value: "" },
       args: { value: {}, validate: RED.validators.typedInput("json") },
       server: { value: "", type: "openfaas-config" }
     },
@@ -14,6 +15,25 @@
       return this.name || "openfaas-function";
     },
     oneditprepare: function() {
+      $("#node-input-function").append(
+        $("<option>", {
+          value: this.function,
+          text: `Don't change (keep ${this.function})`
+        })
+      );
+      $.ajax({
+        url: "openfaas-config",
+        data: { server: this._config.server }
+      }).done(data => {
+        $.each(data, function(i, item) {
+          $("#node-input-function").append(
+            $("<option>", {
+              value: item,
+              text: item
+            })
+          );
+        });
+      });
       $("#node-input-args").typedInput({ types: ["json"] });
     }
   });
@@ -21,8 +41,12 @@
 
 <script type="text/x-red" data-template-name="openfaas-function">
   <div class="form-row">
-    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <label for="node-input-name"><i class="icon-tag"></i> Node Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-function"><i class="icon-tag"></i> Function</label>
+    <select type="text" id="node-input-function" placeholder="Function" style="width: 70%"></select>
   </div>
   <div class="form-row">
     <label for="node-input-args"><i class="fa fa-cogs"></i> Arguments</label>
@@ -30,7 +54,8 @@
   </div>
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-server"></i> Server</label>
-    <select type="text" id="node-input-server" placeholder="Select OpenFaaS server..."></select> </div>
+    <select type="text" id="node-input-server" placeholder="Select OpenFaaS server..."></select>
+  </div>
 </script>
 <script type="text/x-red" data-help-name="openfaas-function">
   <p>A node that executes openfaas function</p>
