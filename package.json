@@ -8,7 +8,7 @@
   "private": false,
   "scripts": {
     "release": "standard-version",
-    "lint": "eslint openfaas-{config,function}/*js  --ignore-pattern node_modules/",
+    "lint": "eslint openfaas-{config,function,common}/*js  --ignore-pattern node_modules/",
     "test": "nyc --reporter=lcov mocha --recursive ./**/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
