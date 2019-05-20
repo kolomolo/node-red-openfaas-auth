@@ -15,7 +15,7 @@ describe("configEndpoint", function() {
     nock.cleanAll();
   });
 
-  it("should load with configuration", function(done) {
+  it("should work with proper configuration", function(done) {
     const fakeRespond = { json: sinon.fake() };
     const fakeGetNode = sinon.fake.returns({
       protocol: "http",
@@ -26,6 +26,21 @@ describe("configEndpoint", function() {
     const server = configEndpoint(fakeRED);
     server({ query: { server: "'test" } }, fakeRespond).then(() => {
       should(fakeRespond.json.calledWith(["foo"])).be.true();
+      done();
+    });
+  });
+
+  it("should throw an error with wrong configuration", function(done) {
+    const fakeRespond = { json: sinon.fake() };
+    const fakeGetNode = sinon.fake.returns({
+      protocol: "http",
+      host: "wrong-example.com",
+      port: 80
+    });
+    const fakeRED = { nodes: { getNode: fakeGetNode } };
+    const server = configEndpoint(fakeRED);
+    server({ query: { server: "'test" } }, fakeRespond).catch(error => {
+      should(error).be.ok();
       done();
     });
   });
