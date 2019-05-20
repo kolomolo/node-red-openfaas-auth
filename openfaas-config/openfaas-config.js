@@ -1,4 +1,3 @@
-const prepareSuperagent = require("../common/prepareSuperagent");
 const configEndpoint = require("../common/configEndpoint");
 
 module.exports = function(RED) {
