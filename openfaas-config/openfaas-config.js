@@ -14,6 +14,7 @@ module.exports = function(RED) {
     this.username = settings.username;
     this.password = settings.password;
     this.useAuth = true;
+    this.graylog = settings.graylog;
   }
   const serverResolver = configEndpoint(RED);
   RED.nodes.registerType("openfaas-config", FaasConfigNode);
