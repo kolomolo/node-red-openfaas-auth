@@ -559,6 +559,13 @@ async-limiter@~1.0.0:
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
   integrity sha512-jp/uFnooOiO+L211eZOoSyzpOITMXx1rBITauYykG3BRYPu8h0UcxsPNB04RR5vo4Tyz3+ay17tR6JVf9qzYWg==
 
+async@^2.5.0:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.2.tgz#18330ea7e6e313887f5d2f2a904bac6fe4dd5381"
+  integrity sha512-H1qVYh1MYhEEFLsP97cVKqCGo7KfCyTt6uEWqsTBr9SO84oK9Uwbyd/yCW+6rKJLHksBNUVWZDAjfS+Ccx0Bbg==
+  dependencies:
+    lodash "^4.17.11"
+
 async@~0.1.22:
   version "0.1.22"
   resolved "https://registry.yarnpkg.com/async/-/async-0.1.22.tgz#0fc1aaa088a0e3ef0ebe2d8831bab0dcf8845061"
@@ -2180,6 +2187,13 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
+gelf@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/gelf/-/gelf-2.0.1.tgz#3973c746b09f62de6cf05811407939471158bb0e"
+  integrity sha512-77duTNPkUgcwFRl+kbmPx2YGMF4e030xBVVsKix5mruTAjuROW36WxmpVSk8MkiZC1D68JYNNb+kfJeZG/D5VQ==
+  dependencies:
+    async "^2.5.0"
+
 get-caller-file@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.3.tgz#f978fa4c90d1dfe7ff2d6beda2a515e713bdcf4a"
@@ -3371,6 +3385,11 @@ mocha@^6.1.4:
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
 
+mock-udp@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/mock-udp/-/mock-udp-0.1.1.tgz#24b5e47707635c34a8b3f0afcefd140b7eb284b5"
+  integrity sha1-JLXkdwdjXDSos/Cvzv0UC36yhLU=
+
 modify-values@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
@@ -3550,6 +3569,12 @@ node-pre-gyp@0.12.0:
     rimraf "^2.6.1"
     semver "^5.3.0"
     tar "^4"
+
+"node-red-contrib-graylog@https://github.com/kolomolo/node-red-graylog":
+  version "1.2.0"
+  resolved "https://github.com/kolomolo/node-red-graylog#e2890f38c27b043d7e3758d4fc3cd16f5778fe2b"
+  dependencies:
+    gelf "^2.0.1"
 
 node-red-node-email@^1.3.0:
   version "1.4.0"
