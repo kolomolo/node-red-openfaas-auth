@@ -1,6 +1,27 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [3.0.0](https://github.com/kolomolo/node-red-openfaas-auth/compare/v1.3.0...v3.0.0) (2019-05-23)
+
+
+### Bug Fixes
+
+* remove unused prepareSuperagent import in openfaas-config ([691d24e](https://github.com/kolomolo/node-red-openfaas-auth/commit/691d24e))
+
+
+### Features
+
+* add graylog setting to openfaas-config node ([178870d](https://github.com/kolomolo/node-red-openfaas-auth/commit/178870d))
+* add logging to Graylog instance ([25d2e3b](https://github.com/kolomolo/node-red-openfaas-auth/commit/25d2e3b))
+
+
+### BREAKING CHANGES
+
+* now when flow fails, throws error instead of warn -
+should've been like this from the start
+
+
 
 # [1.3.0](https://github.com/kolomolo/node-red-openfaas-auth/compare/v1.2.0...v1.3.0) (2019-05-16)
 
