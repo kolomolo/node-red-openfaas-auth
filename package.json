@@ -42,7 +42,7 @@
     "node-red-contrib-graylog": "https://github.com/kolomolo/node-red-graylog",
     "node-red-node-test-helper": "^0.2.2",
     "nyc": "^14.1.1",
-    "prettier": "^1.17.0",
+    "prettier": "^1.17.1",
     "should": "^13.2.3",
     "standard-version": "^6.0.1"
   },
