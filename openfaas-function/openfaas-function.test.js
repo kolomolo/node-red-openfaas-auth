@@ -1,8 +1,10 @@
 const should = require("should/as-function");
 const faasNode = require("./openfaas-function.js");
 const faasConfigNode = require("../openfaas-config/openfaas-config.js");
+const graylogConfigNode = require("node-red-contrib-graylog/graylog-config/graylog-config");
 const helper = require("node-red-node-test-helper");
 const nock = require("nock");
+const mockudp = require("mock-udp");
 
 helper.init(require.resolve("node-red"));
 
@@ -188,7 +190,7 @@ describe("openfaas-function node", function() {
       ];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
-        testNode.on("call:warn", function(error) {
+        testNode.on("call:error", function(error) {
           should(error).exist;
           done();
         });
@@ -249,12 +251,60 @@ describe("openfaas-function node", function() {
       const flow = [FaasConfig, FaasFunction, FaasHelper];
       helper.load([faasNode, faasConfigNode], flow, function() {
         const testNode = helper.getNode("n2");
-        testNode.on("call:warn", function(error) {
+        testNode.on("call:error", function(error) {
           should(error).exist;
           done();
         });
         testNode.receive({ payload: "test" });
       });
+    });
+  });
+  describe("Graylogging functionality", function() {
+    beforeEach(function() {
+      nock.disableNetConnect();
+      nock("http://faas.com:8080")
+        .post("/function/havebeenipwned")
+        .reply(500, "function error!");
+    });
+
+    afterEach(function() {
+      nock.cleanAll();
+    });
+
+    it("should log with proper configuration", function(done) {
+      const scope = mockudp("localhost:1234");
+      const flow = [
+        {
+          type: "graylog-config",
+          id: "n4",
+          host: "localhost",
+          port: "1234"
+        },
+        {
+          ...FaasConfig,
+          graylog: "n4"
+        },
+        FaasFunction
+      ];
+      helper.load(
+        [faasNode, faasConfigNode, graylogConfigNode],
+        flow,
+        function() {
+          const testNode = helper.getNode("n2");
+          testNode.on("call:error", () => {
+            // I really dislike this, but can't think of any other way :/
+            //
+            // Timeout is here to wait for FaasFunction to
+            // send log over UDP to our mock server
+            //
+            setTimeout(() => {
+              scope.done();
+              done();
+            }, 200);
+          });
+          testNode.receive({ payload: "test" });
+        }
+      );
     });
   });
 });

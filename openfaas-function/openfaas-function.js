@@ -1,4 +1,5 @@
 const prepareSuperagent = require("../common/prepareSuperagent");
+const Gelf = require("gelf");
 
 module.exports = function(RED) {
   function FaasNode(config) {
@@ -7,6 +8,16 @@ module.exports = function(RED) {
     this.server = RED.nodes.getNode(config.server);
     if (!this.server) {
       throw "You need to select server first";
+    }
+    const graylog = RED.nodes.getNode(this.server.graylog);
+    if (graylog) {
+      this.gelf = new Gelf({
+        graylogPort: graylog.port,
+        graylogHostname: graylog.host,
+        connection: graylog.connection,
+        maxChunkSizeWan: graylog.maxChunkSizeWan,
+        maxChunkSizeLan: graylog.maxChunkSizeLan
+      });
     }
     this.function = config.function;
     this.args = config.args;
@@ -24,7 +35,13 @@ module.exports = function(RED) {
         msg.payload = response.data;
         this.send(msg);
       } catch (error) {
-        this.warn(
+        if (this.gelf) {
+          this.gelf.emit(
+            "gelf.log",
+            `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
+          );
+        }
+        this.error(
           `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
         );
       }
