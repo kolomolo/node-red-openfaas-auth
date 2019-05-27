@@ -3572,8 +3572,8 @@ node-pre-gyp@0.12.0:
 
 "node-red-contrib-graylog@https://github.com/kolomolo/node-red-graylog":
   version "1.2.0"
-  uid ae2c253cdd88a471b108b864f07d8c08e44bc261
-  resolved "https://github.com/kolomolo/node-red-graylog#ae2c253cdd88a471b108b864f07d8c08e44bc261"
+  uid "66933e186fce0f522725df537c9a94cfb3c0f9c6"
+  resolved "https://github.com/kolomolo/node-red-graylog#66933e186fce0f522725df537c9a94cfb3c0f9c6"
   dependencies:
     gelf "^2.0.1"
 
