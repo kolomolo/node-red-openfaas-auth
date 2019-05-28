@@ -36,11 +36,9 @@ module.exports = function(RED) {
         this.send(msg);
       } catch (error) {
         if (this.gelf) {
-          this.gelf.emit("gelf.log", JSON.stringify(error.data));
+          this.gelf.emit("gelf.log", JSON.stringify(error.response.data));
         }
-        this.error(
-          `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
-        );
+        this.error(JSON.stringify(error.response.data));
       }
     });
   }
