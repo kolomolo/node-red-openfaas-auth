@@ -36,10 +36,7 @@ module.exports = function(RED) {
         this.send(msg);
       } catch (error) {
         if (this.gelf) {
-          this.gelf.emit(
-            "gelf.log",
-            `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
-          );
+          this.gelf.emit("gelf.log", JSON.stringify(error.data));
         }
         this.error(
           `${this.function} - ${JSON.stringify(request)} resulted in ${error}`
