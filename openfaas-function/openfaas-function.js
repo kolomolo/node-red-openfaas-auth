@@ -23,17 +23,18 @@ module.exports = function(RED) {
     this.args = config.args;
 
     this.on("input", async msg => {
+      const cachedMsg = Object.assign({}, msg);
       const { agent, requestUrl } = prepareSuperagent(this.server);
       const request = { payload: null, args: {} };
       request["args"] = this.args || {};
-      request["payload"] = msg.payload;
+      request["payload"] = cachedMsg.payload;
       try {
         const response = await agent.post(
           `${requestUrl}/${this.function}`,
           request
         );
-        msg.payload = response.data;
-        this.send(msg);
+        cachedMsg.payload = response.data;
+        this.send(cachedMsg);
       } catch (error) {
         if (this.gelf) {
           this.gelf.emit("gelf.log", JSON.stringify(error.response.data));
