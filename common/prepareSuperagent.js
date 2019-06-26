@@ -1,9 +1,7 @@
 const axios = require("axios");
 
 module.exports = server => {
-  const requestUrl = `${server.protocol}://${server.host}:${server.port}/${
-    server.endpoint
-  }`;
+  const requestUrl = `${server.protocol}://${server.host}:${server.port}/${server.endpoint}`;
   const headers = {};
   const auth = server.useAuth
     ? { username: server.username, password: server.password }
