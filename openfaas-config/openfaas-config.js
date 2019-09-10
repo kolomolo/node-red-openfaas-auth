@@ -3,7 +3,7 @@ const configEndpoint = require("../common/configEndpoint");
 module.exports = function(RED) {
   function FaasConfigNode(settings) {
     RED.nodes.createNode(this, settings);
-    this.label = settings.label;
+    this.name = settings.name;
     this.protocol = settings.protocol;
     this.host = settings.host;
     this.port = settings.port;

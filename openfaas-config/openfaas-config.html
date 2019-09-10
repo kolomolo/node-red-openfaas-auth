@@ -2,7 +2,7 @@
   RED.nodes.registerType("openfaas-config", {
     category: "config",
     defaults: {
-      label: { value: "label", required: true },
+      name: { value: "", required: true },
       protocol: { value: "http", required: true },
       host: { value: "localhost", required: true },
       port: { value: 8080, required: true, validate: RED.validators.number() },
@@ -16,15 +16,15 @@
       graylog: { value: "", type: "graylog-config", required: false }
     },
     label: function() {
-      return this.label || `${this.host}:${this.port}`;
+      return this.name || "faas-config";
     }
   });
 </script>
 
 <script type="text/x-red" data-template-name="openfaas-config">
   <div class="form-row">
-      <label for="node-config-input-label"><i class="icon-bookmark"></i> Label</label>
-      <input type="text" id="node-config-input-label">
+      <label for="node-config-input-name"><i class="icon-bookmark"></i> Label</label>
+      <input type="text" id="node-config-input-name">
   </div>
   <div class="form-row">
       <label for="node-config-input-protocol"><i class="icon-bookmark"></i> Protocol</label>
