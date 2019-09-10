@@ -34,6 +34,7 @@ module.exports = function(RED) {
           request
         );
         cachedMsg.payload = response.data;
+        cachedMsg.response = response;
         this.send(cachedMsg);
       } catch (error) {
         if (this.gelf) {
