@@ -24,7 +24,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.1.0",
     "@commitlint/config-conventional": "^8.1.0",
-    "coveralls": "^3.0.5",
+    "coveralls": "^3.0.6",
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-standard": "^13.0.1",
