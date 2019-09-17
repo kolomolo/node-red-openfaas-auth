@@ -33,7 +33,7 @@ module.exports = function(RED) {
           `${requestUrl}/${this.function}`,
           request
         );
-        cachedMsg.payload = response.data;
+        cachedMsg.payload = JSON.stringify(response.data);
         cachedMsg.response = response;
         this.send(cachedMsg);
       } catch (error) {
