@@ -79,7 +79,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).deepEqual({ found: 123 });
+          should(msg.payload).equal(JSON.stringify({ found: 123 }));
           done();
         });
         testNode.receive({ payload: "test" });
@@ -113,7 +113,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).equal("TEST_FAILED");
+          should(msg.payload).equal(JSON.stringify("TEST_FAILED"));
           done();
         });
         testNode.receive({ payload: "test" });
@@ -130,7 +130,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).equal("TEST_SUCCEDED");
+          should(msg.payload).equal(JSON.stringify("TEST_SUCCEDED"));
           done();
         });
         testNode.receive({ payload: "test" });
@@ -175,7 +175,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).deepEqual({ found: 123 });
+          should(msg.payload).equal(JSON.stringify({ found: 123 }));
           done();
         });
         testNode.receive({ payload: "test" });
@@ -240,7 +240,7 @@ describe("openfaas-function node", function() {
         const testNode = helper.getNode("n2");
         const resultNode = helper.getNode("n3");
         resultNode.on("input", function(msg) {
-          should(msg.payload).deepEqual({ found: 123 });
+          should(msg.payload).equal(JSON.stringify({ found: 123 }));
           done();
         });
         testNode.receive({ payload: "test" });
